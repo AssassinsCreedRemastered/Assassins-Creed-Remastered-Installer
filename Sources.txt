@@ -1,4 +1,4 @@
-uMod.zip:https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/texmod/uMod_alpha_v2_r53.zip
-EaglePatchAC1.rar:https://github.com/Sergeanur/EaglePatch/releases/download/v1.0/EaglePatchAC1.rar
-ACOverhaul:https://www.moddb.com/downloads/mirror/113376/129/b0eb00eaae07beb970dad315e7a77a40/?referer=https%3A%2F%2Fwww.moddb.com%2Fmods%2Fassassins-creed-2014-overhaul
-PSButtons.rar:https://drive.google.com/uc?export=download&id=1FCliPuLN6JP_R3q_zgKB492DuUulQNrc
+uMod.zip;https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/texmod/uMod_alpha_v2_r53.zip
+EaglePatchAC1.rar;https://github.com/Sergeanur/EaglePatch/releases/download/v1.0/EaglePatchAC1.rar
+ACOverhaul;https://www.moddb.com/downloads/mirror/113376/129/b0eb00eaae07beb970dad315e7a77a40/?referer=https%3A%2F%2Fwww.moddb.com%2Fmods%2Fassassins-creed-2014-overhaul
+PSButtons.rar;https://drive.google.com/uc?export=download&id=1FCliPuLN6JP_R3q_zgKB492DuUulQNrc
