@@ -6,23 +6,6 @@
         xmlns:local="clr-namespace:Assassins_Creed_Remastered_Installer"
         mc:Ignorable="d"
         Title="Assassin's Creed Remastered Installer" Height="450" Width="400" HorizontalAlignment="Center" VerticalAlignment="Center" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" Background="Transparent" AllowsTransparency="True" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-    <Window.Resources>
-        <Style x:Key="RoundedProgressBar" TargetType="ProgressBar">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ProgressBar">
-                        <Grid x:Name="TemplateRoot" SnapsToDevicePixels="true">
-                            <Border x:Name="BarBackground"
-                                CornerRadius="10"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
     <Border
             BorderBrush="Gray"
             BorderThickness="1"
@@ -113,7 +96,10 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <ProgressBar x:Name="Progress" Height="40" Width="260" Margin="0,40,0,0" Minimum="0" Maximum="100" Style="{StaticResource RoundedProgressBar}"/>
+                <Grid>
+                    <ProgressBar x:Name="Progress" Height="40" Width="260" Margin="0,40,0,0" Minimum="0" Maximum="100"/>
+                    <TextBlock x:Name="TextProgress" Text="0%" Margin="29,40,29,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"></TextBlock>
+                </Grid>
             </StackPanel>
         </Grid>
     </Border>

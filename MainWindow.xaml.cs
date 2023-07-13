@@ -33,19 +33,27 @@ namespace Assassins_Creed_Remastered_Installer
             }
         }
 
-        private void Exit_Click(object sender, RoutedEventArgs e)
+        private async void Exit_Click(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
         }
 
-        private void Install_Click(object sender, RoutedEventArgs e)
+        private async void Install_Click(object sender, RoutedEventArgs e)
         {
-
+            Progress.Value = 0;
+            TextProgress.Text = "0%";
+            while (Progress.Value < 100)
+            {
+                Progress.Value++;
+                TextProgress.Text = Progress.Value + "%";
+                await Task.Delay(100); // Simulate some work being done
+            }
         }
 
-        private void Uninstall_Click(object sender, RoutedEventArgs e)
+        private async void Uninstall_Click(object sender, RoutedEventArgs e)
         {
-
+            Progress.Value = 0;
+            TextProgress.Text = "0%";
         }
     }
 }
