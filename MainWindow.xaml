@@ -97,9 +97,10 @@
                     </Button.Template>
                 </Button>
                 <Grid>
-                    <ProgressBar x:Name="Progress" Height="40" Width="260" Margin="0,40,0,0" Minimum="0" Maximum="100"/>
-                    <TextBlock x:Name="TextProgress" Text="0%" Margin="29,40,29,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"></TextBlock>
+                    <ProgressBar x:Name="Progress" Height="40" Width="260" Margin="0,40,0,0" Minimum="0" Maximum="5"/>
+                    <TextBlock x:Name="TextProgress" Text="" Margin="29,40,29,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"></TextBlock>
                 </Grid>
+                <TextBlock x:Name="Description" Text="" Foreground="White" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"></TextBlock>
             </StackPanel>
         </Grid>
     </Border>

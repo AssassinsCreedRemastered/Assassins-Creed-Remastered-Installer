@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.49" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Assets\icon.ico" />
     <Resource Include="Assets\background3.jpg" />
     <Resource Include="Assets\Icons\Exit.png" />
