@@ -19,6 +19,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Threading;
 using Microsoft.Win32;
+using IWshRuntimeLibrary;
 using System.Runtime.InteropServices;
 using SharpCompress.Common;
 using SharpCompress.Archives;
@@ -209,9 +210,9 @@ namespace Assassins_Creed_Remastered_Installer
                     case "ASI-Loader":
                         if (System.IO.Directory.Exists(directory))
                         {
-                            if (File.Exists(directory + @"\dinput8.dll"))
+                            if (System.IO.File.Exists(directory + @"\dinput8.dll"))
                             {
-                                File.Move(directory + @"\dinput8.dll", path + @"\dinput8.dll");
+                                System.IO.File.Move(directory + @"\dinput8.dll", path + @"\dinput8.dll");
                             }
                         }
                         if (Directory.Exists(directory))
@@ -226,9 +227,9 @@ namespace Assassins_Creed_Remastered_Installer
                             {
                                 Directory.Move(directory, path + @"\scripts");
                             }
-                            if (File.Exists(path + @"\scripts\Readme - EaglePatchAC1.txt"))
+                            if (System.IO.File.Exists(path + @"\scripts\Readme - EaglePatchAC1.txt"))
                             {
-                                File.Delete(path + @"\scripts\Readme - EaglePatchAC1.txt");
+                                System.IO.File.Delete(path + @"\scripts\Readme - EaglePatchAC1.txt");
                             }
                         }
                         break;
@@ -254,10 +255,10 @@ namespace Assassins_Creed_Remastered_Installer
                     case "AssassinsCreed_Dx9":
                         if (Directory.Exists(directory))
                         {
-                            if (File.Exists(path + @"\AssassinsCreed_Dx9.exe"))
+                            if (System.IO.File.Exists(path + @"\AssassinsCreed_Dx9.exe"))
                             {
-                                File.Move(path + @"\AssassinsCreed_Dx9.exe", path + @"\AssassinsCreed_Dx9.exe.bkp");
-                                File.Move(directory + @"\AssassinsCreed_Dx9.exe", path + @"\AssassinsCreed_Dx9.exe");
+                                System.IO.File.Move(path + @"\AssassinsCreed_Dx9.exe", path + @"\AssassinsCreed_Dx9.exe.bkp");
+                                System.IO.File.Move(directory + @"\AssassinsCreed_Dx9.exe", path + @"\AssassinsCreed_Dx9.exe");
                             }
                             Directory.Delete(directory, true);
                         }
@@ -270,6 +271,37 @@ namespace Assassins_Creed_Remastered_Installer
                         if (!Directory.Exists(path + @"\Mods\Overhaul"))
                         {
                             Directory.Move(directory, path + @"\Mods\Overhaul");
+                        }
+                        break;
+                    case "ReShade":
+                        if (Directory.Exists(directory))
+                        {
+                            foreach (string file in Directory.GetFiles(directory))
+                            {
+                                if (!System.IO.File.Exists(path + @"\" + System.IO.Path.GetFileName(file)))
+                                {
+                                    System.IO.File.Move(file, path + @"\" + System.IO.Path.GetFileName(file));
+                                }
+                            }
+                            foreach (string dir in Directory.GetDirectories(directory))
+                            {
+                                if (!Directory.Exists(path + @"\" + System.IO.Path.GetFileName(dir)))
+                                {
+                                    Directory.Move(dir, path + @"\" + System.IO.Path.GetFileName(dir));
+                                }
+                            }
+                        }
+                        break;
+                    case "Launcher":
+                        if (Directory.Exists(directory))
+                        {
+                            foreach (string file in Directory.GetFiles(directory))
+                            {
+                                if (!System.IO.File.Exists(path + @"\" + System.IO.Path.GetFileName(file)))
+                                {
+                                    System.IO.File.Move(file, path + @"\" + System.IO.Path.GetFileName(file));
+                                }
+                            }
                         }
                         break;
                 }
@@ -414,6 +446,35 @@ namespace Assassins_Creed_Remastered_Installer
             }
         }
 
+        private async Task CreateShortcut()
+        {
+            try
+            {
+                if (!System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Assassin's Creed Remastered.lnk"))
+                {
+                    MessageBoxResult result = MessageBox.Show("Do you want to create shortcut?", "Confirmation", MessageBoxButton.YesNo);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        WshShell shell = new WshShell();
+                        string SearchLocation = Environment.GetFolderPath(Environment.SpecialFolder.StartMenu);
+                        string ShortcutLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Assassin's Creed Remastered.lnk";
+                        IWshShortcut Shortcut = shell.CreateShortcut(ShortcutLocation);
+                        Shortcut.Description = "Shortcut for Assassin's Creed Remastered";
+                        Shortcut.IconLocation = path + @"\icon.ico";
+                        Shortcut.TargetPath = path + @"\AssassinsCreedRemasteredLauncher.exe";
+                        Shortcut.Save();
+                        System.IO.File.Copy(ShortcutLocation, SearchLocation + @"\Assassin's Creed Remastered.lnk");
+                    }
+                }
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
         // Events
         // This is needed for Window moving
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -451,19 +512,23 @@ namespace Assassins_Creed_Remastered_Installer
                 {
                     System.IO.Directory.CreateDirectory("Mods");
                 };
-                using (StreamWriter sw = new StreamWriter(path + @"\Path.txt"))
+                using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
                 {
-                    sw.WriteLine(path + @"\");
+                    sw.WriteLine(path);
                 };
                 await ReadSources("https://raw.githubusercontent.com/AssassinsCreedRemastered/Assassins-Creed-Remastered-Mods/main/Sources.txt");
                 for (int i = 0; i < Sources.Keys.Count; i++)
                 {
                     KeyValuePair<string, string> keyValue = Sources.ElementAt(i);
-                    await DownloadFiles(keyValue.Value, @"Mods\"+ keyValue.Key, i);
+                    if (!System.IO.File.Exists(Directory.GetCurrentDirectory() + @"\Mods\" + keyValue.Key))
+                    {
+                        await DownloadFiles(keyValue.Value, @"Mods\" + keyValue.Key, i);
+                    }
                     await InstallMods(keyValue.Key);
                 };
                 Description.Text = "Setting up uMod";
                 await uModSetup();
+                await CreateShortcut();
                 Description.Text = "Cleaning up";
                 Directory.Delete(Directory.GetCurrentDirectory() + @"\Mods", true);
                 Progress.Value = 0;
@@ -491,34 +556,97 @@ namespace Assassins_Creed_Remastered_Installer
             {
                 return;
             }
-            if (File.Exists(path + @"\dinput8.dll"))
+            try
             {
-                File.Delete(path + @"\dinput8.dll");
-            };
-            if (Directory.Exists(path + @"\Mods"))
-            {
-                Directory.Delete(path + @"\Mods",true);
-            };
-            if (Directory.Exists(path + @"\scripts"))
-            {
-                Directory.Delete(path + @"\scripts", true);
-            };
-            if (Directory.Exists(path + @"\uMod"))
-            {
-                Directory.Delete(path + @"\uMod", true);
-            };
-            if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod"))
-            {
-                Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod", true);
+
+                // Delete Ultimate ASI Loader
+                if (System.IO.File.Exists(path + @"\dinput8.dll"))
+                {
+                    System.IO.File.Delete(path + @"\dinput8.dll");
+                };
+
+                // Delete Mods Folder that has PS3 Buttons and Overhaul Mod
+                if (Directory.Exists(path + @"\Mods"))
+                {
+                    Directory.Delete(path + @"\Mods", true);
+                };
+
+                // Delete scripts folder that has EaglePatch
+                if (Directory.Exists(path + @"\scripts"))
+                {
+                    Directory.Delete(path + @"\scripts", true);
+                };
+
+                // Delete uMod
+                if (Directory.Exists(path + @"\uMod"))
+                {
+                    Directory.Delete(path + @"\uMod", true);
+                };
+
+                // Delete uMod settings
+                if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod"))
+                {
+                    Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod", true);
+                }
+
+                if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
+                {
+                    System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt");
+                }
+
+                // Restore Original non LAA executable
+                if (System.IO.File.Exists(path + @"\AssassinsCreed_Dx9.exe.bkp"))
+                {
+                    System.IO.File.Delete(path + @"\AssassinsCreed_Dx9.exe");
+                    System.IO.File.Move(path + @"\AssassinsCreed_Dx9.exe.bkp", path + @"\AssassinsCreed_Dx9.exe");
+                }
+
+                // Delete ReShade
+                if (System.IO.File.Exists(path + @"\d3d9.dll"))
+                {
+                    System.IO.File.Delete(path + @"\d3d9.dll");
+                };
+                if (System.IO.File.Exists(path + @"\d3d9.log"))
+                {
+                    System.IO.File.Delete(path + @"\d3d9.log");
+                };
+                if (System.IO.File.Exists(path + @"\dxgi.dll"))
+                {
+                    System.IO.File.Delete(path + @"\dxgi.dll");
+                };
+                if (System.IO.File.Exists(path + @"\ReShade.ini"))
+                {
+                    System.IO.File.Delete(path + @"\ReShade.ini");
+                };
+                if (Directory.Exists(path + @"\ReShade"))
+                {
+                    Directory.Delete(path + @"\ReShade", true);
+                };
+
+                // Delete Launcher
+                if (System.IO.File.Exists(path + @"\AssassinsCreedRemasteredLauncher.exe"))
+                {
+                    System.IO.File.Delete(path + @"\AssassinsCreedRemasteredLauncher.exe");
+                };
+                if (System.IO.File.Exists(path + @"\icon.ico"))
+                {
+                    System.IO.File.Delete(path + @"\icon.ico");
+                };
+
+                // Delete Shortcut
+                if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Assassin's Creed Remastered.lnk"))
+                {
+                    System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Assassin's Creed Remastered.lnk");
+                }
+                Description.Text = "Uninstallation Completed";
+                MessageBox.Show("Uninstallation completed.");
+                await Task.Delay(10);
             }
-            if (File.Exists(path + @"\AssassinsCreed_Dx9.exe.bkp"))
+            catch (Exception ex)
             {
-                File.Delete(path + @"\AssassinsCreed_Dx9.exe");
-                File.Move(path + @"\AssassinsCreed_Dx9.exe.bkp", path + @"\AssassinsCreed_Dx9.exe");
+                MessageBox.Show(ex.Message);
+                return;
             }
-            Description.Text = "Uninstallation Completed";
-            MessageBox.Show("Uninstallation completed.");
-            await Task.Delay(10);
         }
     }
 }
