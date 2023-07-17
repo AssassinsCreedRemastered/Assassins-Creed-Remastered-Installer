@@ -461,7 +461,7 @@ namespace Assassins_Creed_Remastered_Installer
                         IWshShortcut Shortcut = shell.CreateShortcut(ShortcutLocation);
                         Shortcut.Description = "Shortcut for Assassin's Creed Remastered";
                         Shortcut.IconLocation = path + @"\icon.ico";
-                        Shortcut.TargetPath = path + @"\AssassinsCreedRemasteredLauncher.exe";
+                        Shortcut.TargetPath = path + @"\Assassins Creed Remastered Launcher.exe";
                         Shortcut.Save();
                         System.IO.File.Copy(ShortcutLocation, SearchLocation + @"\Assassin's Creed Remastered.lnk");
                     }
@@ -628,6 +628,10 @@ namespace Assassins_Creed_Remastered_Installer
                 {
                     System.IO.File.Delete(path + @"\AssassinsCreedRemasteredLauncher.exe");
                 };
+                if (System.IO.File.Exists(path + @"\Assassins Creed Remastered Launcher.exe"))
+                {
+                    System.IO.File.Delete(path + @"\Assassins Creed Remastered Launcher.exe");
+                };
                 if (System.IO.File.Exists(path + @"\icon.ico"))
                 {
                     System.IO.File.Delete(path + @"\icon.ico");
@@ -637,6 +641,11 @@ namespace Assassins_Creed_Remastered_Installer
                 if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Assassin's Creed Remastered.lnk"))
                 {
                     System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Assassin's Creed Remastered.lnk");
+                }
+
+                if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu) + @"\Assassin's Creed Remastered.lnk"))
+                {
+                    System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu) + @"\Assassin's Creed Remastered.lnk");
                 }
                 Description.Text = "Uninstallation Completed";
                 MessageBox.Show("Uninstallation completed.");
