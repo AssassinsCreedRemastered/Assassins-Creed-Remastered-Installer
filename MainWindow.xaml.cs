@@ -637,6 +637,12 @@ namespace Assassins_Creed_Remastered_Installer
                     System.IO.File.Delete(path + @"\icon.ico");
                 };
 
+                // Delete Launcher Updater
+                if (System.IO.File.Exists(path + @"\Assassins Creed Remastered Launcher Updater.exe"))
+                {
+                    System.IO.File.Delete(path + @"\Assassins Creed Remastered Launcher Updater.exe");
+                };
+
                 // Delete Shortcut
                 if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Assassin's Creed Remastered.lnk"))
                 {
