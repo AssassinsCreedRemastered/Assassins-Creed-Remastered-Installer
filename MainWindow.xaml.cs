@@ -212,7 +212,7 @@ namespace Assassins_Creed_Remastered_Installer
                         {
                             if (System.IO.File.Exists(directory + @"\dinput8.dll"))
                             {
-                                System.IO.File.Move(directory + @"\dinput8.dll", path + @"\dinput8.dll");
+                                System.IO.File.Move(directory + @"\dinput8.dll", path + @"\dinput8.dll", true);
                             }
                         }
                         if (Directory.Exists(directory))
@@ -280,7 +280,7 @@ namespace Assassins_Creed_Remastered_Installer
                             {
                                 if (!System.IO.File.Exists(path + @"\" + System.IO.Path.GetFileName(file)))
                                 {
-                                    System.IO.File.Move(file, path + @"\" + System.IO.Path.GetFileName(file));
+                                    System.IO.File.Move(file, path + @"\" + System.IO.Path.GetFileName(file), true);
                                 }
                             }
                             foreach (string dir in Directory.GetDirectories(directory))
@@ -299,7 +299,7 @@ namespace Assassins_Creed_Remastered_Installer
                             {
                                 if (!System.IO.File.Exists(path + @"\" + System.IO.Path.GetFileName(file)))
                                 {
-                                    System.IO.File.Move(file, path + @"\" + System.IO.Path.GetFileName(file));
+                                    System.IO.File.Move(file, path + @"\" + System.IO.Path.GetFileName(file), true);
                                 }
                             }
                         }
