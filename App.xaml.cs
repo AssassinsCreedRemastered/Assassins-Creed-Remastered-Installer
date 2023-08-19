@@ -13,5 +13,6 @@ namespace Assassins_Creed_Remastered_Installer
     /// </summary>
     public partial class App : Application
     {
+
     }
 }

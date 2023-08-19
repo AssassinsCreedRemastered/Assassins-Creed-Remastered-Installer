@@ -507,10 +507,18 @@ namespace Assassins_Creed_Remastered_Installer
                 else
                 {
                     return;
-                }
+                };
                 if (!System.IO.Directory.Exists("Mods"))
                 {
                     System.IO.Directory.CreateDirectory("Mods");
+                };
+                if (!System.IO.Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\"))
+                {
+                    System.IO.Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\");
+                };
+                if (!System.IO.Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\"))
+                {
+                    System.IO.Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\");
                 };
                 using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
                 {
