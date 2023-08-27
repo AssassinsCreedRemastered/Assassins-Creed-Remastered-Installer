@@ -149,11 +149,11 @@ namespace Assassins_Creed_Remastered_Installer
             try
             {
                 // Directory.GetCurrenDirecotry doesn't have \ at the end
-                string fullPath = Directory.GetCurrentDirectory() + @"\Mods\" + name;
-                string directory = Directory.GetCurrentDirectory() + @"\Mods\" + System.IO.Path.GetFileNameWithoutExtension(name);
-                if (!Directory.Exists(Directory.GetCurrentDirectory() + @"\Mods\" + System.IO.Path.GetFileNameWithoutExtension(name)))
+                string fullPath = Directory.GetCurrentDirectory() + @"\Installation Files\" + name;
+                string directory = Directory.GetCurrentDirectory() + @"\Installation Files\" + System.IO.Path.GetFileNameWithoutExtension(name);
+                if (!Directory.Exists(Directory.GetCurrentDirectory() + @"\Installation Files\" + System.IO.Path.GetFileNameWithoutExtension(name)))
                 {
-                    Directory.CreateDirectory(Directory.GetCurrentDirectory() + @"\Mods\" + System.IO.Path.GetFileNameWithoutExtension(name));
+                    Directory.CreateDirectory(Directory.GetCurrentDirectory() + @"\Installation Files\" + System.IO.Path.GetFileNameWithoutExtension(name));
                 };
                 Description.Text = "Extracting " + System.IO.Path.GetFileNameWithoutExtension(name);
                 await Extract(fullPath, directory);
@@ -508,9 +508,9 @@ namespace Assassins_Creed_Remastered_Installer
                 {
                     return;
                 };
-                if (!System.IO.Directory.Exists("Mods"))
+                if (!System.IO.Directory.Exists("Installation Files"))
                 {
-                    System.IO.Directory.CreateDirectory("Mods");
+                    System.IO.Directory.CreateDirectory("Installation Files");
                 };
                 if (!System.IO.Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\"))
                 {
@@ -528,9 +528,9 @@ namespace Assassins_Creed_Remastered_Installer
                 for (int i = 0; i < Sources.Keys.Count; i++)
                 {
                     KeyValuePair<string, string> keyValue = Sources.ElementAt(i);
-                    if (!System.IO.File.Exists(Directory.GetCurrentDirectory() + @"\Mods\" + keyValue.Key))
+                    if (!System.IO.File.Exists(Directory.GetCurrentDirectory() + @"\Installation Files\" + keyValue.Key))
                     {
-                        await DownloadFiles(keyValue.Value, @"Mods\" + keyValue.Key, i);
+                        await DownloadFiles(keyValue.Value, @"Installation Files\" + keyValue.Key, i);
                     }
                     await InstallMods(keyValue.Key);
                 };
@@ -538,7 +538,7 @@ namespace Assassins_Creed_Remastered_Installer
                 await uModSetup();
                 await CreateShortcut();
                 Description.Text = "Cleaning up";
-                Directory.Delete(Directory.GetCurrentDirectory() + @"\Mods", true);
+                Directory.Delete(Directory.GetCurrentDirectory() + @"\Installation Files", true);
                 Progress.Value = 0;
                 TextProgress.Text = "";
                 Description.Text = "Installation Completed";
