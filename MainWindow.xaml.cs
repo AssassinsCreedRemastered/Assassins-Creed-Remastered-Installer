@@ -367,6 +367,7 @@ namespace Assassins_Creed_Remastered_Installer
                 }
                 else
                 {
+                    /*
                     string ExecutableDirectory = path + @"\AssassinsCreed_Dx9.exe";
                     char[] array = ExecutableDirectory.ToCharArray();
                     List<char> charList = new List<char>();
@@ -388,6 +389,76 @@ namespace Assassins_Creed_Remastered_Installer
                     using (StreamWriter sw = new StreamWriter(AppData + @"\uMod\uMod_DX9.txt"))
                     {
                         sw.Write(ExecutablePath);
+                    }
+                    */
+                    if (!System.IO.File.Exists(AppData + @"\uMod\uMod_DX9.txt"))
+                    {
+                        string ExecutableDirectory = path + @"\AssassinsCreed_Dx9.exe";
+                        char[] array = ExecutableDirectory.ToCharArray();
+                        List<char> charList = new List<char>();
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                charList.Add(array[i]);
+                            }
+                            else
+                            {
+                                charList.Add('\0');
+                                charList.Add(array[i]);
+                            }
+                        }
+                        charList.Add('\0');
+                        char[] charArray = charList.ToArray();
+                        string ExecutablePath = new string(charArray);
+                        using (StreamWriter sw = new StreamWriter(AppData + @"\uMod\uMod_DX9.txt"))
+                        {
+                            sw.Write(ExecutablePath);
+                        }
+                    }
+                    else
+                    {
+                        string ExecutableDirectory = path + @"\AssassinsCreed_Dx9.exe";
+                        char[] array = ExecutableDirectory.ToCharArray();
+                        List<char> charList = new List<char>();
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                charList.Add(array[i]);
+                            }
+                            else
+                            {
+                                charList.Add('\0');
+                                charList.Add(array[i]);
+                            }
+                        }
+                        charList.Add('\0');
+                        char[] charArray = charList.ToArray();
+                        string ExecutablePath = new string(charArray);
+                        using (StreamReader sr = new StreamReader(AppData + @"\uMod\uMod_DX9.txt"))
+                        {
+                            using (StreamWriter sw = new StreamWriter(AppData + @"\uMod\uMod_DX9temp.txt"))
+                            {
+                                string line = sr.ReadLine();
+                                while (line != null)
+                                {
+
+                                    if (line == '\0'.ToString())
+                                    {
+                                        sw.Write(line);
+                                    }
+                                    else
+                                    {
+                                        sw.Write(line + "\n");
+                                    }
+                                    line = sr.ReadLine();
+                                }
+                                sw.Write(ExecutablePath);
+                            }
+                        }
+                        System.IO.File.Delete(AppData + @"\uMod\uMod_DX9.txt");
+                        System.IO.File.Move(AppData + @"\uMod\uMod_DX9temp.txt", AppData + @"\uMod\uMod_DX9.txt");
                     }
                 }
                 await Task.Delay(10);
@@ -472,6 +543,59 @@ namespace Assassins_Creed_Remastered_Installer
             {
                 MessageBox.Show(ex.Message);
                 return;
+            }
+        }
+
+        private async Task RemoveGameFromuMod()
+        {
+            try
+            {
+                string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                bool isFirstLine = true;
+                using (StreamReader sr = new StreamReader(AppData + @"\uMod\uMod_DX9.txt"))
+                {
+                    using (StreamWriter sw = new StreamWriter(AppData + @"\uMod\uMod_DX9temp.txt"))
+                    {
+                        string line = sr.ReadLine();
+                        while (line != null)
+                        {
+                            if (line == '\0'.ToString() && !line.EndsWith("AssassinsCreed_Dx9.exe"))
+                            {
+                                if (isFirstLine)
+                                {
+                                    sw.Write(line.TrimStart('\0'));
+                                    isFirstLine = false;
+                                }
+                                else
+                                {
+                                    sw.Write(line);
+                                }
+                            }
+                            else if (!line.EndsWith("AssassinsCreed_Dx9.exe"))
+                            {
+                                if (isFirstLine)
+                                {
+                                    sw.Write(line.TrimStart('\0') + "\n");
+                                    isFirstLine = false;
+                                }
+                                else
+                                {
+                                    sw.Write(line + "\n");
+                                }
+                            }
+                            line = sr.ReadLine();
+                        }
+                    }
+                }
+                System.IO.File.Delete(AppData + @"\uMod\uMod_DX9.txt");
+                System.IO.File.Move(AppData + @"\uMod\uMod_DX9temp.txt", AppData + @"\uMod\uMod_DX9.txt");
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+                throw;
             }
         }
 
@@ -592,9 +716,17 @@ namespace Assassins_Creed_Remastered_Installer
                 };
 
                 // Delete uMod settings
-                if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod"))
+                MessageBoxResult result = MessageBox.Show("Do you want to delete all of uMod settings?", "Confirmation", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
                 {
-                    Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod", true);
+                    if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod"))
+                    {
+                        Directory.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod", true);
+                    }
+                }
+                else
+                {
+                    RemoveGameFromuMod();
                 }
 
                 if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
