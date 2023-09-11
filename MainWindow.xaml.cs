@@ -205,8 +205,6 @@ namespace Assassins_Creed_Remastered_Installer
             {
                 switch (name)
                 {
-                    default:
-                        break;
                     case "ASI-Loader":
                         if (System.IO.Directory.Exists(directory))
                         {
@@ -295,14 +293,22 @@ namespace Assassins_Creed_Remastered_Installer
                     case "Launcher":
                         if (Directory.Exists(directory))
                         {
-                            foreach (string file in Directory.GetFiles(directory))
+                            if (System.IO.File.Exists(directory + @"\Assassins Creed Remastered Launcher.exe"))
                             {
-                                if (!System.IO.File.Exists(path + @"\" + System.IO.Path.GetFileName(file)))
-                                {
-                                    System.IO.File.Move(file, path + @"\" + System.IO.Path.GetFileName(file), true);
-                                }
+                                System.IO.File.Move(directory + @"\Assassins Creed Remastered Launcher.exe", path + @"\Assassins Creed Remastered Launcher.exe", true);
                             }
                         }
+                        break;
+                    case "Updater":
+                        if (Directory.Exists(directory))
+                        {
+                            if (System.IO.File.Exists(directory + @"\Assassins Creed Remastered Launcher Updater.exe"))
+                            {
+                                System.IO.File.Move(directory + @"\Assassins Creed Remastered Launcher Updater.exe", path + @"\Assassins Creed Remastered Launcher Updater.exe",true);
+                            }
+                        }
+                        break;
+                    default:
                         break;
                 }
                 GC.Collect();
@@ -367,30 +373,6 @@ namespace Assassins_Creed_Remastered_Installer
                 }
                 else
                 {
-                    /*
-                    string ExecutableDirectory = path + @"\AssassinsCreed_Dx9.exe";
-                    char[] array = ExecutableDirectory.ToCharArray();
-                    List<char> charList = new List<char>();
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        if (i == 0)
-                        {
-                            charList.Add(array[i]);
-                        }
-                        else
-                        {
-                            charList.Add('\0');
-                            charList.Add(array[i]);
-                        }
-                    }
-                    charList.Add('\0');
-                    char[] charArray = charList.ToArray();
-                    string ExecutablePath = new string(charArray);
-                    using (StreamWriter sw = new StreamWriter(AppData + @"\uMod\uMod_DX9.txt"))
-                    {
-                        sw.Write(ExecutablePath);
-                    }
-                    */
                     if (!System.IO.File.Exists(AppData + @"\uMod\uMod_DX9.txt"))
                     {
                         string ExecutableDirectory = path + @"\AssassinsCreed_Dx9.exe";
@@ -478,6 +460,13 @@ namespace Assassins_Creed_Remastered_Installer
                 {
                     Directory.CreateDirectory(path + @"\uMod\templates");
                 }
+                if (!System.IO.File.Exists(path + @"\uMod\Status.txt"))
+                {
+                    using (StreamWriter sw = new StreamWriter(path + @"\uMod\Status.txt"))
+                    {
+                        sw.Write("Enabled=1");
+                    }
+                }
                 using (StreamWriter sw = new StreamWriter(path + @"\uMod\templates\ac1.txt"))
                 {
                     sw.Write("SaveAllTextures:0\n");
@@ -531,7 +520,7 @@ namespace Assassins_Creed_Remastered_Installer
                         string ShortcutLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Assassin's Creed Remastered.lnk";
                         IWshShortcut Shortcut = shell.CreateShortcut(ShortcutLocation);
                         Shortcut.Description = "Shortcut for Assassin's Creed Remastered";
-                        Shortcut.IconLocation = path + @"\icon.ico";
+                        Shortcut.IconLocation = $"{path + @"\Assassins Creed Remastered Launcher.exe"}, {0}";
                         Shortcut.TargetPath = path + @"\Assassins Creed Remastered Launcher.exe";
                         Shortcut.Save();
                         System.IO.File.Copy(ShortcutLocation, SearchLocation + @"\Assassin's Creed Remastered.lnk");
