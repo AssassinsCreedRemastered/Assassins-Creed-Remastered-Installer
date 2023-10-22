@@ -210,20 +210,19 @@ namespace Assassins_Creed_Remastered_Installer
                         {
                             if (System.IO.File.Exists(directory + @"\dinput8.dll"))
                             {
-                                System.IO.File.Move(directory + @"\dinput8.dll", path + @"\dinput8.dll", true);
+                                //System.IO.File.Move(directory + @"\dinput8.dll", path + @"\dinput8.dll", true);
+                                System.IO.File.Copy(directory + @"\dinput8.dll", path + @"\dinput8.dll", true);
                             }
                         }
-                        if (Directory.Exists(directory))
-                        {
-                            Directory.Delete(directory);
-                        };
                         break;
                     case "EaglePatchAC1":
                         if (Directory.Exists(directory))
                         {
                             if (!Directory.Exists(path + @"\scripts"))
                             {
-                                Directory.Move(directory, path + @"\scripts");
+                                //Directory.Move(directory, path + @"\scripts");
+                                System.IO.File.Copy(directory + @"\EaglePatchAC1.asi", path + @"\scripts\EaglePatchAC1.asi");
+                                System.IO.File.Copy(directory + @"\EaglePatchAC1.ini", path + @"\scripts\EaglePatchAC1.ini");
                             }
                             if (System.IO.File.Exists(path + @"\scripts\Readme - EaglePatchAC1.txt"))
                             {
@@ -256,9 +255,8 @@ namespace Assassins_Creed_Remastered_Installer
                             if (System.IO.File.Exists(path + @"\AssassinsCreed_Dx9.exe"))
                             {
                                 System.IO.File.Move(path + @"\AssassinsCreed_Dx9.exe", path + @"\AssassinsCreed_Dx9.exe.bkp");
-                                System.IO.File.Move(directory + @"\AssassinsCreed_Dx9.exe", path + @"\AssassinsCreed_Dx9.exe");
+                                System.IO.File.Copy(directory + @"\AssassinsCreed_Dx9.exe", path + @"\AssassinsCreed_Dx9.exe");
                             }
-                            Directory.Delete(directory, true);
                         }
                         break;
                     case "Overhaul":
@@ -278,7 +276,7 @@ namespace Assassins_Creed_Remastered_Installer
                             {
                                 if (!System.IO.File.Exists(path + @"\" + System.IO.Path.GetFileName(file)))
                                 {
-                                    System.IO.File.Move(file, path + @"\" + System.IO.Path.GetFileName(file), true);
+                                    System.IO.File.Copy(file, path + @"\" + System.IO.Path.GetFileName(file), true);
                                 }
                             }
                             foreach (string dir in Directory.GetDirectories(directory))
@@ -295,7 +293,7 @@ namespace Assassins_Creed_Remastered_Installer
                         {
                             if (System.IO.File.Exists(directory + @"\Assassins Creed Remastered Launcher.exe"))
                             {
-                                System.IO.File.Move(directory + @"\Assassins Creed Remastered Launcher.exe", path + @"\Assassins Creed Remastered Launcher.exe", true);
+                                System.IO.File.Copy(directory + @"\Assassins Creed Remastered Launcher.exe", path + @"\Assassins Creed Remastered Launcher.exe", true);
                             }
                         }
                         break;
@@ -304,7 +302,7 @@ namespace Assassins_Creed_Remastered_Installer
                         {
                             if (System.IO.File.Exists(directory + @"\Assassins Creed Remastered Launcher Updater.exe"))
                             {
-                                System.IO.File.Move(directory + @"\Assassins Creed Remastered Launcher Updater.exe", path + @"\Assassins Creed Remastered Launcher Updater.exe",true);
+                                System.IO.File.Copy(directory + @"\Assassins Creed Remastered Launcher Updater.exe", path + @"\Assassins Creed Remastered Launcher Updater.exe",true);
                             }
                         }
                         break;
@@ -541,6 +539,7 @@ namespace Assassins_Creed_Remastered_Installer
             {
                 string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 bool isFirstLine = true;
+                // AssassinsCreed_Dx9.exe
                 using (StreamReader sr = new StreamReader(AppData + @"\uMod\uMod_DX9.txt"))
                 {
                     using (StreamWriter sw = new StreamWriter(AppData + @"\uMod\uMod_DX9temp.txt"))
@@ -679,7 +678,6 @@ namespace Assassins_Creed_Remastered_Installer
             }
             try
             {
-
                 // Delete Ultimate ASI Loader
                 if (System.IO.File.Exists(path + @"\dinput8.dll"))
                 {
@@ -703,7 +701,6 @@ namespace Assassins_Creed_Remastered_Installer
                 {
                     Directory.Delete(path + @"\uMod", true);
                 };
-
                 // Delete uMod settings
                 MessageBoxResult result = MessageBox.Show("Do you want to delete all of uMod settings?", "Confirmation", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
@@ -717,7 +714,6 @@ namespace Assassins_Creed_Remastered_Installer
                 {
                     RemoveGameFromuMod();
                 }
-
                 if (System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
                 {
                     System.IO.File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt");
