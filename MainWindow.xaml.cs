@@ -148,7 +148,7 @@ namespace Assassins_Creed_Remastered_Installer
         {
             try
             {
-                // Directory.GetCurrenDirecotry doesn't have \ at the end
+                // Directory.GetCurrentDirecotry doesn't have \ at the end
                 string fullPath = Directory.GetCurrentDirectory() + @"\Installation Files\" + name;
                 string directory = Directory.GetCurrentDirectory() + @"\Installation Files\" + System.IO.Path.GetFileNameWithoutExtension(name);
                 if (!Directory.Exists(Directory.GetCurrentDirectory() + @"\Installation Files\" + System.IO.Path.GetFileNameWithoutExtension(name)))
@@ -221,9 +221,10 @@ namespace Assassins_Creed_Remastered_Installer
                             if (!Directory.Exists(path + @"\scripts"))
                             {
                                 //Directory.Move(directory, path + @"\scripts");
-                                System.IO.File.Copy(directory + @"\EaglePatchAC1.asi", path + @"\scripts\EaglePatchAC1.asi");
-                                System.IO.File.Copy(directory + @"\EaglePatchAC1.ini", path + @"\scripts\EaglePatchAC1.ini");
+                                Directory.CreateDirectory(path + @"\scripts");
                             }
+                            System.IO.File.Copy(directory + @"\EaglePatchAC1.asi", path + @"\scripts\EaglePatchAC1.asi");
+                            System.IO.File.Copy(directory + @"\EaglePatchAC1.ini", path + @"\scripts\EaglePatchAC1.ini");
                             if (System.IO.File.Exists(path + @"\scripts\Readme - EaglePatchAC1.txt"))
                             {
                                 System.IO.File.Delete(path + @"\scripts\Readme - EaglePatchAC1.txt");
@@ -235,7 +236,8 @@ namespace Assassins_Creed_Remastered_Installer
                         {
                             if (!Directory.Exists(path + @"\uMod"))
                             {
-                                Directory.Move(directory, path + @"\uMod");
+                                CopyDirectory(directory, path + @"\uMod");
+                                //Directory.Move(directory, path + @"\uMod");
                             }
                         }
                         break;
@@ -246,7 +248,8 @@ namespace Assassins_Creed_Remastered_Installer
                         };
                         if (!Directory.Exists(path + @"\Mods\PS3Buttons"))
                         {
-                            Directory.Move(directory, path + @"\Mods\PS3Buttons");
+                            CopyDirectory(directory, path + @"\Mods\PS3Buttons");
+                            //Directory.Move(directory, path + @"\Mods\PS3Buttons");
                         }
                         break;
                     case "AssassinsCreed_Dx9":
@@ -272,6 +275,7 @@ namespace Assassins_Creed_Remastered_Installer
                     case "ReShade":
                         if (Directory.Exists(directory))
                         {
+                            /*
                             foreach (string file in Directory.GetFiles(directory))
                             {
                                 if (!System.IO.File.Exists(path + @"\" + System.IO.Path.GetFileName(file)))
@@ -286,6 +290,8 @@ namespace Assassins_Creed_Remastered_Installer
                                     Directory.Move(dir, path + @"\" + System.IO.Path.GetFileName(dir));
                                 }
                             }
+                            */
+                            CopyDirectory(directory, path + @"\");
                         }
                         break;
                     case "Launcher":
@@ -310,11 +316,38 @@ namespace Assassins_Creed_Remastered_Installer
                         break;
                 }
                 GC.Collect();
-                await Task.Delay(10);
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        private static void CopyDirectory(string source, string target)
+        {
+            try
+            {
+                if (!Directory.Exists(target))
+                {
+                    Directory.CreateDirectory(target);
+                }
+                foreach (string file in Directory.GetFiles(source))
+                {
+                    string destination = System.IO.Path.Combine(target, System.IO.Path.GetFileName(file));
+                    System.IO.File.Copy(file, destination);
+                }
+
+                foreach (string subDir in Directory.GetDirectories(source))
+                {
+                    string destination = System.IO.Path.Combine(target, System.IO.Path.GetFileName(subDir));
+                    CopyDirectory(subDir, destination);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
         }
