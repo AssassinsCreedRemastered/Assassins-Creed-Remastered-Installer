@@ -269,7 +269,7 @@ namespace Assassins_Creed_Remastered_Installer
                         };
                         if (!Directory.Exists(path + @"\Mods\Overhaul"))
                         {
-                            Directory.Move(directory, path + @"\Mods\Overhaul");
+                            CopyDirectory(directory, path + @"\Mods\Overhaul");
                         }
                         break;
                     case "ReShade":
